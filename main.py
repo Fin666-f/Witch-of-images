@@ -3,7 +3,7 @@ import sys
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
-from PIL import Image
+from PIL import Image, ImageFilter
 from designs.main_menu import Ui_MainWindow
 import os
 
@@ -30,7 +30,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.action.triggered.connect(self.save_image)
 
         self.pushButton.clicked.connect(self.screen_update)
+        self.pushButton_2.clicked.connect(self.sharpen)
         self.pushButton_5.clicked.connect(self.white_black)
+        self.pushButton_4.clicked.connect(self.embross)
+        self.pushButton_6.clicked.connect(self.edges)
         self.back_pushButton.clicked.connect(self.back)
         self.exit_pushButton_2.clicked.connect(self.exit)
         self.exit_pushButton.clicked.connect(self.exit)
@@ -98,6 +101,84 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             elif self.mode == 'RGBA' or self.mode == 'LA':
                 image = image.convert('LA')
                 image = image.convert('RGBA')
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.screen_update()
+            self.image_data()
+            self.save_data_settings()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def embross(self):
+        if self.steps < 100:
+            self.image_data()
+            image = Image.open(resource_path(self.name))
+            if image.mode == "RGBA":
+                r, g, b, a = image.split()
+            else:
+                r, g, b = image.split()
+            beta = Image.merge('RGB', (r, g, b))
+            beta = beta.filter(ImageFilter.SMOOTH)
+            beta = beta.filter(ImageFilter.EMBOSS)
+            if image.mode == "RGBA":
+                r, g, b = beta.split()
+                result = Image.merge('RGBA', (r, g, b, a))
+            else:
+                result = beta
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            result.save(self.name)
+            result.close()
+            image.close()
+            self.screen_update()
+            self.image_data()
+            self.save_data_settings()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def edges(self):
+        if self.steps < 100:
+            self.image_data()
+            image = Image.open(resource_path(self.name))
+            if image.mode == "RGBA":
+                r, g, b, a = image.split()
+            else:
+                r, g, b = image.split()
+            beta = Image.merge('RGB', (r, g, b))
+            beta = beta.filter(ImageFilter.SMOOTH)
+            beta = beta.filter(ImageFilter.FIND_EDGES)
+            if image.mode == "RGBA":
+                r, g, b = beta.split()
+                result = Image.merge('RGBA', (r, g, b, a))
+            else:
+                result = beta
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            result.save(self.name)
+            result.close()
+            image.close()
+            self.screen_update()
+            self.image_data()
+            self.save_data_settings()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def sharpen(self):
+        if self.steps < 100:
+            self.image_data()
+            image = Image.open(resource_path(self.name))
+            image = image.filter(ImageFilter.SHARPEN)
             self.steps += 1
             if self.steps < 10:
                 self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
