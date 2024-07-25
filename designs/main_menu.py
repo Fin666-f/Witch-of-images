@@ -160,7 +160,7 @@ class Ui_MainWindow(object):
         self.pushButton_1.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_1.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_1.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_1.setObjectName("pushButton_1")
@@ -171,7 +171,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_2.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_2.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_2.setObjectName("pushButton_2")
@@ -184,7 +184,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_3.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_3.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_3.setObjectName("pushButton_3")
@@ -195,7 +195,7 @@ class Ui_MainWindow(object):
         self.pushButton_4.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_4.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_4.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_4.setObjectName("pushButton_4")
@@ -208,7 +208,7 @@ class Ui_MainWindow(object):
         self.pushButton_5.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_5.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_5.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_5.setObjectName("pushButton_5")
@@ -219,7 +219,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_6.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_6.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_6.setObjectName("pushButton_6")
@@ -232,7 +232,7 @@ class Ui_MainWindow(object):
         self.pushButton_7.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_7.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_7.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_7.setObjectName("pushButton_7")
@@ -243,7 +243,7 @@ class Ui_MainWindow(object):
         self.pushButton_8.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_8.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_8.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_8.setObjectName("pushButton_8")
@@ -256,7 +256,7 @@ class Ui_MainWindow(object):
         self.pushButton_9.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_9.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_9.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_9.setObjectName("pushButton_9")
@@ -267,7 +267,7 @@ class Ui_MainWindow(object):
         self.pushButton_10.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_10.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_10.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_10.setObjectName("pushButton_10")
@@ -304,7 +304,7 @@ class Ui_MainWindow(object):
         self.pushButton_15.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_15.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_15.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_15.setObjectName("pushButton_15")
@@ -319,7 +319,7 @@ class Ui_MainWindow(object):
         self.pushButton_11.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_11.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_11.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_11.setObjectName("pushButton_11")
@@ -330,7 +330,7 @@ class Ui_MainWindow(object):
         self.pushButton_12.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_12.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_12.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_12.setObjectName("pushButton_12")
@@ -343,7 +343,7 @@ class Ui_MainWindow(object):
         self.pushButton_13.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_13.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_13.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_13.setObjectName("pushButton_13")
@@ -354,7 +354,7 @@ class Ui_MainWindow(object):
         self.pushButton_14.setMinimumSize(QtCore.QSize(224, 60))
         self.pushButton_14.setMaximumSize(QtCore.QSize(224, 60))
         self.pushButton_14.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 24pt \"Arial\";\n"
+"font: 22pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.pushButton_14.setObjectName("pushButton_14")
@@ -481,11 +481,11 @@ class Ui_MainWindow(object):
         self.pushButton_9.setText(_translate("MainWindow", "Квуантиз"))
         self.pushButton_10.setText(_translate("MainWindow", "Контрастность"))
         self.label_4.setText(_translate("MainWindow", "Операции:"))
-        self.pushButton_15.setText(_translate("MainWindow", "Чёрно-белое"))
-        self.pushButton_11.setText(_translate("MainWindow", "Негатив"))
-        self.pushButton_12.setText(_translate("MainWindow", "Резкость"))
-        self.pushButton_13.setText(_translate("MainWindow", "Размытие"))
-        self.pushButton_14.setText(_translate("MainWindow", "Эмбросс"))
+        self.pushButton_15.setText(_translate("MainWindow", "Стерео пара"))
+        self.pushButton_11.setText(_translate("MainWindow", "Отзеркалить"))
+        self.pushButton_12.setText(_translate("MainWindow", "Поворот"))
+        self.pushButton_13.setText(_translate("MainWindow", "Обрезка"))
+        self.pushButton_14.setText(_translate("MainWindow", "Переразмерить"))
         self.exit_pushButton.setText(_translate("MainWindow", "Выход"))
         self.label_image.setText(_translate("MainWindow", "TextLabel"))
         self.menu.setTitle(_translate("MainWindow", "Файл"))

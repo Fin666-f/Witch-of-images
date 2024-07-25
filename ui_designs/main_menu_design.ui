@@ -102,6 +102,41 @@ color:rgb(255, 255, 255);</string>
      <property name="spacing">
       <number>0</number>
      </property>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>1022</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>1022</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:rgb(40, 40, 40);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../../Desktop/dark_icons/image (6).png</normaloff>../../../Desktop/dark_icons/image (6).png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>60</width>
+         <height>60</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QWidget" name="main_menu_widget_2" native="true">
        <property name="minimumSize">
@@ -446,7 +481,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -484,7 +519,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -516,7 +551,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -554,7 +589,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -586,7 +621,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -624,7 +659,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -656,7 +691,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -694,7 +729,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -726,7 +761,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -764,7 +799,7 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
@@ -869,12 +904,12 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>Чёрно-белое</string>
+                   <string>Стерео пара</string>
                   </property>
                  </widget>
                 </item>
@@ -914,12 +949,12 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>Негатив</string>
+                   <string>Отзеркалить</string>
                   </property>
                  </widget>
                 </item>
@@ -952,12 +987,12 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>Резкость</string>
+                   <string>Поворот</string>
                   </property>
                  </widget>
                 </item>
@@ -984,12 +1019,12 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>Размытие</string>
+                   <string>Обрезка</string>
                   </property>
                  </widget>
                 </item>
@@ -1022,12 +1057,12 @@ border-radius: 10px;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgb(60, 60, 60);
-font: 24pt &quot;Arial&quot;;
+font: 22pt &quot;Arial&quot;;
 color: rgb(255, 255, 255);
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>Эмбросс</string>
+                   <string>Переразмерить</string>
                   </property>
                  </widget>
                 </item>
@@ -1179,41 +1214,6 @@ border-radius: 10px;</string>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButton">
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>1022</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>60</width>
-         <height>1022</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color:rgb(40, 40, 40);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../../Desktop/dark_icons/image (6).png</normaloff>../../../Desktop/dark_icons/image (6).png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>60</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
       <widget class="QLabel" name="label_image">
        <property name="minimumSize">
         <size>
