@@ -1,10 +1,13 @@
 import sys
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PIL import Image, ImageFilter
 from designs.main_menu import Ui_MainWindow
+from designs.negative_menu import Ui_NegativeWindow
+import numpy as np
 import os
 
 
@@ -16,7 +19,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-class MyWidget(QMainWindow, Ui_MainWindow):
+class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.open_data_settings()
@@ -30,6 +33,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.action.triggered.connect(self.save_image)
 
         self.pushButton.clicked.connect(self.screen_update)
+        self.pushButton_1.clicked.connect(self.go_negative)
         self.pushButton_2.clicked.connect(self.sharpen)
         self.pushButton_5.clicked.connect(self.white_black)
         self.pushButton_4.clicked.connect(self.embross)
@@ -192,6 +196,12 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         else:
             self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
 
+    def go_negative(self):
+        self.save_data_settings()
+        negative_window = NegativeWidget()
+        widget.addWidget(negative_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
     def remove_image(self):
         images = os.listdir(resource_path('steps_images'))
         images = sorted(images)
@@ -234,13 +244,125 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.steps = 0
         self.remove_image()
         self.save_data_settings()
-        ex.close()
+        widget.close()
+
+
+class NegativeWidget(QMainWindow, Ui_NegativeWindow):
+    def __init__(self):
+        super().__init__()
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.negative()
+        self.negative_value_now = 255
+        self.horizontalSlider.setMinimum(0)
+        self.horizontalSlider.setMaximum(255)
+        self.horizontalSlider.setProperty("value", 255)
+        self.label.setText("")
+        self.pixmap = QPixmap(self.name)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.horizontalSlider.valueChanged['int'].connect(self.negative_value)
+
+        self.pushButton_1.clicked.connect(self.save_negative)
+        self.pushButton_2.clicked.connect(self.exit_negative)
+
+    def screen_update(self, image):
+        if self.mode == 'RGBA':
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGBA8888)
+        else:
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+        self.pixmap = QPixmap.fromImage(image)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+    def image_data(self):
+        image = Image.open(resource_path(self.name))
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+    def open_data_settings(self):
+        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def negative_value(self, value):
+        self.negative_value_now = value
+        self.update()
+
+    def change_negative(self, image, value):
+        image = Image.fromarray(np.uint8(image))
+        if self.mode == "RGBA":
+            r, g, b, a = image.split()
+        else:
+            r, g, b = image.split()
+        beta = Image.merge('RGB', (r, g, b))
+        beta = np.asarray(image)
+        beta = Image.fromarray(np.uint8(abs(value - beta)))
+        beta = beta.convert('RGB')
+        if self.mode == "RGBA":
+            r, g, b = beta.split()
+            result = Image.merge('RGBA', (r, g, b, a))
+        else:
+            result = beta
+        result = np.asarray(result)
+        return result
+
+    def update(self):
+        image = self.change_negative(self.image, self.negative_value_now)
+        self.result = image
+        self.screen_update(image)
+
+    def negative(self):
+        image = Image.open(self.name)
+        self.image = np.asarray(image)
+        image.close()
+        self.screen_update(self.image)
+
+    def save_negative(self):
+        if self.steps < 100:
+            image = Image.fromarray(np.uint8(self.result))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_negative()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_negative(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MyWidget()
-    ex.setGeometry(0, 0, 1920, 1080)
-    ex.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-    ex.show()
+    main_window = MainWidget()
+    widget = QtWidgets.QStackedWidget()
+    widget.addWidget(main_window)
+    widget.setGeometry(0, 0, 1920, 1080)
+    widget.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+    widget.show()
     sys.exit(app.exec_())
