@@ -12,7 +12,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-class Ui_NegativeWindow(object):
+class Ui_OtherWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1080)
@@ -61,8 +61,8 @@ class Ui_NegativeWindow(object):
         self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_2 = QtWidgets.QLabel(self.widget_2)
-        self.label_2.setMinimumSize(QtCore.QSize(210, 90))
-        self.label_2.setMaximumSize(QtCore.QSize(210, 90))
+        self.label_2.setMinimumSize(QtCore.QSize(420, 90))
+        self.label_2.setMaximumSize(QtCore.QSize(420, 90))
         self.label_2.setStyleSheet("font: 40pt \"Arial\";")
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_3.addWidget(self.label_2)
