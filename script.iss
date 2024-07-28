@@ -4,24 +4,16 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{89E8553D-86BC-44EE-B60B-93E11CF82611}
-AppName=My Program
-AppVersion=1.5
-;AppVerName=My Program 1.5
+AppId={{DA8FDAFB-3D65-40BF-BA17-065306DF33CF}
+AppName=Witch of images
+AppVersion=1.0
+;AppVerName=Witch of images 1.0
 AppPublisher=My Company, Inc.
 AppPublisherURL=https://www.example.com/
 AppSupportURL=https://www.example.com/
 AppUpdatesURL=https://www.example.com/
-DefaultDirName={autopf}\My Program
-; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
-; on anything but x64 and Windows 11 on Arm.
-ArchitecturesAllowed=x64compatible
-; "ArchitecturesInstallIn64BitMode=x64compatible" requests that the
-; install be done in "64-bit mode" on x64 or Windows 11 on Arm,
-; meaning it should use the native 64-bit Program Files directory and
-; the 64-bit view of the registry.
-ArchitecturesInstallIn64BitMode=x64compatible
-DefaultGroupName=My Program
+DefaultDirName={autopf}\Witch of images
+DefaultGroupName=Witch of images
 AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
@@ -35,21 +27,11 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-
 [Files]
-Source: "C:\Users\user\Documents\Документы\Witch-of-images\output\main\main.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\user\Documents\Документы\Witch-of-images\output\main\_internal\*"; DestDir: "{app}/_internal"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\user\Documents\Документы\Witch-of-images\steps_images\*"; DestDir: "{app}/steps_images"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\user\Documents\Документы\Witch-of-images\main.dist\*"; DestDir: "{app}/main.dist"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\My Program"; Filename: "{app}\main.exe"
-Name: "{group}\{cm:ProgramOnTheWeb,My Program}"; Filename: "https://www.example.com/"
-Name: "{group}\{cm:UninstallProgram,My Program}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\My Program"; Filename: "{app}\main.exe"; Tasks: desktopicon
-
-[Run]
-Filename: "{app}\main.exe"; Description: "{cm:LaunchProgram,My Program}"; Flags: nowait postinstall skipifsilent
+Name: "{group}\{cm:ProgramOnTheWeb,Witch of images}"; Filename: "https://www.example.com/"
+Name: "{group}\{cm:UninstallProgram,Witch of images}"; Filename: "{uninstallexe}"
 

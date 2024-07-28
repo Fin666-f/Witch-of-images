@@ -2,11 +2,15 @@ import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QTransform
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
-from PIL import Image, ImageFilter, ImageEnhance
+from PIL import Image, ImageFilter, ImageEnhance, ImageOps
+import PIL
 from designs.main_menu import Ui_MainWindow
 from designs.others_menu import Ui_OtherWindow
+from designs.mirror_menu import Ui_MirrorWindow
+from designs.rotation_menu import Ui_RotationWindow
+from designs.resize_menu import Ui_ResizeWindow
 import numpy as np
 import os
 
@@ -43,6 +47,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_8.clicked.connect(self.go_bright)
         self.pushButton_9.clicked.connect(self.go_quantize)
         self.pushButton_10.clicked.connect(self.go_contrast)
+        self.pushButton_11.clicked.connect(self.go_mirror)
+        self.pushButton_12.clicked.connect(self.go_rotation)
+        self.pushButton_14.clicked.connect(self.go_resize)
         self.back_pushButton.clicked.connect(self.back)
         self.exit_pushButton_2.clicked.connect(self.exit)
         self.exit_pushButton.clicked.connect(self.exit)
@@ -207,6 +214,24 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.save_data_settings()
         sharpen_window = SharpenWidget()
         widget.addWidget(sharpen_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def go_mirror(self):
+        self.save_data_settings()
+        mirror_window = MirrorWidget()
+        widget.addWidget(mirror_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def go_rotation(self):
+        self.save_data_settings()
+        rotation_window = RotationWidget()
+        widget.addWidget(rotation_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def go_resize(self):
+        self.save_data_settings()
+        resize_window = ResizeWidget()
+        widget.addWidget(resize_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def remove_image(self):
@@ -579,7 +604,7 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
         self.setupUi(self)
         self.image_data()
         self.saturation()
-        self.arrange_value_now = 1000
+        self.saturation_value_now = 1000
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(2000)
         self.horizontalSlider.setProperty("value", 1000)
@@ -629,7 +654,7 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
             file.write(s)
 
     def saturation_value(self, value):
-        self.arrange_value_now = value
+        self.saturation_value_now = value
         self.update()
 
     def change_saturation(self, image, value):
@@ -640,7 +665,7 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
         return result
 
     def update(self):
-        image = self.change_saturation(self.image, self.arrange_value_now)
+        image = self.change_saturation(self.image, self.saturation_value_now)
         self.result = image
         self.screen_update(image)
 
@@ -884,7 +909,7 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
         self.setupUi(self)
         self.image_data()
         self.quantize()
-        self.contrast_value_now = 255
+        self.quantize_value_now = 255
         self.horizontalSlider.setMinimum(1)
         self.horizontalSlider.setMaximum(255)
         self.horizontalSlider.setProperty("value", 255)
@@ -934,7 +959,7 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
             file.write(s)
 
     def quantize_value(self, value):
-        self.contrast_value_now = value
+        self.quantize_value_now = value
         self.update()
 
     def change_quantize(self, image, value):
@@ -955,7 +980,7 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
         return result
 
     def update(self):
-        image = self.change_quantize(self.image, self.contrast_value_now)
+        image = self.change_quantize(self.image, self.quantize_value_now)
         self.result = image
         self.screen_update(image)
 
@@ -993,7 +1018,7 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
         self.setupUi(self)
         self.image_data()
         self.sharpen()
-        self.blur_value_now = 100
+        self.sharpen_value_now = 100
         self.horizontalSlider.setMinimum(100)
         self.horizontalSlider.setMaximum(1000)
         self.horizontalSlider.setProperty("value", 100)
@@ -1043,7 +1068,7 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
             file.write(s)
 
     def sharpen_value(self, value):
-        self.blur_value_now = value
+        self.sharpen_value_now = value
         self.update()
 
     def change_sharpen(self, image, value):
@@ -1053,7 +1078,7 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
         return result
 
     def update(self):
-        image = self.change_sharpen(self.image, self.blur_value_now)
+        image = self.change_sharpen(self.image, self.sharpen_value_now)
         self.result = image
         self.screen_update(image)
 
@@ -1079,6 +1104,288 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
             self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
 
     def exit_sharpen(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class MirrorWidget(QMainWindow, Ui_MirrorWindow):
+    def __init__(self):
+        super().__init__()
+        self.ox_count = 0
+        self.oy_count = 0
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.pixmap = QtGui.QPixmap(resource_path(self.name))
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.pushButton_3.clicked.connect(self.mirror)
+        self.pushButton_4.clicked.connect(self.mirror)
+        self.pushButton_1.clicked.connect(self.save_mirror)
+        self.pushButton_2.clicked.connect(self.exit_mirror)
+
+    def image_data(self):
+        image = Image.open(resource_path(self.name))
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+    def open_data_settings(self):
+        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def mirror(self):
+        self.axe = self.sender().text()
+        if self.axe == 'OY':
+            self.pixmap = self.pixmap.transformed(QTransform().scale(-1, 1))
+            self.oy_count += 1
+        else:
+            self.pixmap = self.pixmap.transformed(QTransform().scale(1, -1))
+            self.ox_count += 1
+        self.label_image.setPixmap(self.pixmap)
+
+    def save_mirror(self):
+        if self.steps < 100:
+            self.oy_count %= 2
+            self.ox_count %= 2
+            image = Image.open(self.name)
+            if self.oy_count == 1:
+                image = ImageOps.mirror(image)
+            if self.ox_count == 1:
+                pixels = np.asarray(image)
+                image = Image.fromarray(np.uint8(pixels[::-1]))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_mirror()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_mirror(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class RotationWidget(QMainWindow, Ui_RotationWindow):
+    def __init__(self):
+        super().__init__()
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.rotation()
+        self.spinBox.setProperty("value", 0)
+        self.rotation_value_now = 0
+        self.pixmap = QPixmap(self.name)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.spinBox.valueChanged['int'].connect(self.rotation_value)
+        self.pushButton_1.clicked.connect(self.save_rotation)
+        self.pushButton_2.clicked.connect(self.exit_rotation)
+
+    def screen_update(self, image):
+        if self.mode == 'RGBA':
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGBA8888)
+        else:
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+        self.pixmap = QPixmap.fromImage(image)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+    def image_data(self):
+        image = Image.open(resource_path(self.name))
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+    def open_data_settings(self):
+        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def rotation_value(self, value):
+        self.rotation_value_now = value
+        self.update()
+
+    def change_rotation(self, image, value):
+        image = Image.fromarray(np.uint8(image))
+        result = image.rotate(value, expand=True)
+        result = np.asarray(result)
+        return result
+
+    def update(self):
+        image = self.change_rotation(self.image, self.rotation_value_now)
+        self.result = image
+        self.screen_update(image)
+
+    def rotation(self):
+        image = Image.open(self.name)
+        self.image = np.asarray(image)
+        image.close()
+        self.screen_update(self.image)
+
+    def save_rotation(self):
+        if self.steps < 100:
+            image = Image.fromarray(np.uint8(self.result))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_rotation()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_rotation(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class ResizeWidget(QMainWindow, Ui_ResizeWindow):
+    def __init__(self):
+        super().__init__()
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.resize()
+        self.spinBox.setMinimum(1)
+        self.spinBox.setMaximum(8888)
+        self.spinBox_2.setMinimum(1)
+        self.spinBox_2.setMaximum(8888)
+        self.spinBox.setProperty("value", self.x)
+        self.spinBox_2.setProperty("value", self.y)
+        self.x_value_now = self.x
+        self.y_value_now = self.y
+        self.pixmap = QPixmap(self.name)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.spinBox.valueChanged['int'].connect(self.x_value)
+        self.spinBox_2.valueChanged['int'].connect(self.y_value)
+
+        self.pushButton_1.clicked.connect(self.save_resize)
+        self.pushButton_2.clicked.connect(self.exit_resize)
+
+    def screen_image(self, image):
+        if self.mode == 'RGBA':
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGBA8888)
+        else:
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+        self.pixmap = QPixmap.fromImage(image)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+
+    def image_data(self):
+        image = Image.open(resource_path(self.name))
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+    def open_data_settings(self):
+        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def x_value(self, value):
+        self.x_value_now = value
+        self.update()
+
+    def y_value(self, value):
+        self.y_value_now = value
+        self.update()
+
+    def change_resize(self, image, value_x, value_y):
+        image = Image.fromarray(np.uint8(image))
+        result = image.resize((value_x, value_y))
+        result = np.asarray(result)
+        return result
+
+    def update(self):
+        image = self.change_resize(self.image, self.x_value_now, self.y_value_now)
+        self.result = image
+        self.screen_image(image)
+
+    def resize(self):
+        image = Image.open(self.name)
+        self.image = np.asarray(image)
+        image.close()
+        self.screen_image(self.image)
+
+    def save_resize(self):
+        if self.steps < 100:
+            image = Image.fromarray(np.uint8(self.result))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_resize()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_resize(self):
         main_window = MainWidget()
         widget.addWidget(main_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)

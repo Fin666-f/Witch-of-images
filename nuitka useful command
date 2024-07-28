@@ -1,0 +1,1 @@
+python -m nuitka --standalone --follow-imports --windows-icon-from-ico=./witch.ico --disable-console --enable-plugin=pyqt5 --include-data-dir=./designs=designs --include-data-dir=./steps_images=steps_images --include-data-dir=./system_data=system_data main.py
