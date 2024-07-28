@@ -5,12 +5,12 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap, QTransform
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PIL import Image, ImageFilter, ImageEnhance, ImageOps
-import PIL
 from designs.main_menu import Ui_MainWindow
 from designs.others_menu import Ui_OtherWindow
 from designs.mirror_menu import Ui_MirrorWindow
 from designs.rotation_menu import Ui_RotationWindow
 from designs.resize_menu import Ui_ResizeWindow
+from designs.stereo_menu import Ui_StereoWindow
 import numpy as np
 import os
 
@@ -50,6 +50,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_11.clicked.connect(self.go_mirror)
         self.pushButton_12.clicked.connect(self.go_rotation)
         self.pushButton_14.clicked.connect(self.go_resize)
+        self.pushButton_15.clicked.connect(self.go_stereo)
         self.back_pushButton.clicked.connect(self.back)
         self.exit_pushButton_2.clicked.connect(self.exit)
         self.exit_pushButton.clicked.connect(self.exit)
@@ -232,6 +233,12 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.save_data_settings()
         resize_window = ResizeWidget()
         widget.addWidget(resize_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def go_stereo(self):
+        self.save_data_settings()
+        stereo_window = StereoWidget()
+        widget.addWidget(stereo_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def remove_image(self):
@@ -1386,6 +1393,176 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
             self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
 
     def exit_resize(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class StereoWidget(QMainWindow, Ui_StereoWindow):
+    def __init__(self):
+        super().__init__()
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.stereo()
+
+        self.spinBox_2.setMinimum(-self.y)
+        self.spinBox_2.setMaximum(self.y)
+        self.spinBox_2.setProperty("value", 0)
+        self.r_y_value_now = 0
+        self.spinBox_2.valueChanged['int'].connect(self.r_y_value)
+
+        self.spinBox_4.setMinimum(-self.y)
+        self.spinBox_4.setMaximum(self.y)
+        self.spinBox_4.setProperty("value", 0)
+        self.g_y_value_now = 0
+        self.spinBox_4.valueChanged['int'].connect(self.g_y_value)
+
+        self.spinBox_6.setMinimum(-self.y)
+        self.spinBox_6.setMaximum(self.y)
+        self.spinBox_6.setProperty("value", 0)
+        self.b_y_value_now = 0
+        self.spinBox_6.valueChanged['int'].connect(self.b_y_value)
+
+        self.spinBox.setMinimum(-self.x)
+        self.spinBox.setMaximum(self.x)
+        self.spinBox.setProperty("value", 0)
+        self.r_x_value_now = 0
+        self.spinBox.valueChanged['int'].connect(self.r_x_value)
+
+        self.spinBox_3.setMinimum(-self.x)
+        self.spinBox_3.setMaximum(self.x)
+        self.spinBox_3.setProperty("value", 0)
+        self.g_x_value_now = 0
+        self.spinBox_3.valueChanged['int'].connect(self.g_x_value)
+
+        self.spinBox_5.setMinimum(-self.x)
+        self.spinBox_5.setMaximum(self.x)
+        self.spinBox_5.setProperty("value", 0)
+        self.b_x_value_now = 0
+        self.spinBox_5.valueChanged['int'].connect(self.b_x_value)
+
+        self.pixmap = QPixmap(self.name)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.pushButton_1.clicked.connect(self.save_stereo)
+        self.pushButton_2.clicked.connect(self.exit_stereo)
+
+    def screen_image(self, image):
+        if self.mode == 'RGBA':
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGBA8888)
+        else:
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+        self.pixmap = QPixmap.fromImage(image)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+
+    def image_data(self):
+        image = Image.open(resource_path(self.name))
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+
+    def open_data_settings(self):
+        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def r_y_value(self, value):
+        self.r_y_value_now = value
+        self.update()
+
+    def r_x_value(self, value):
+        self.r_x_value_now = value
+        self.update()
+
+    def g_y_value(self, value):
+        self.g_y_value_now = value
+        self.update()
+
+    def g_x_value(self, value):
+        self.g_x_value_now = value
+        self.update()
+
+    def b_y_value(self, value):
+        self.b_y_value_now = value
+        self.update()
+
+    def b_x_value(self, value):
+        self.b_x_value_now = value
+        self.update()
+
+    def change_stereo(self, image, r_x, g_x, b_x, r_y, g_y, b_y):
+        image = Image.fromarray(np.uint8(image))
+        if image.mode == "RGBA":
+            r, g, b, a = image.split()
+            newImage_a = Image.new('L', (self.x, self.y), 0)
+        else:
+            r, g, b = image.split()
+        newImage_r = Image.new('L', (self.x, self.y), 0)
+        newImage_g = Image.new('L', (self.x, self.y), 0)
+        newImage_b = Image.new('L', (self.x, self.y), 0)
+        red = r.crop((0, 0, self.x - r_x, self.y - r_y))
+        green = g.crop((0, 0, self.x - g_x, self.y - g_y))
+        blue = b.crop((0, 0, self.x - b_x, self.y - b_y))
+        newImage_r.paste(red, (r_x, r_y, self.x, self.y))
+        newImage_g.paste(green, (g_x, g_y, self.x, self.y))
+        newImage_b.paste(blue, (b_x, b_y, self.x, self.y))
+
+        beta = Image.merge('RGB', (newImage_r, newImage_g, newImage_b))
+        if image.mode == "RGBA":
+            r, g, b = beta.split()
+            result = Image.merge('RGBA', (r, g, b, a))
+        else:
+            result = beta
+        result = np.asarray(result)
+        return result
+
+    def update(self):
+        image = self.change_stereo(self.image, self.r_x_value_now, self.g_x_value_now, self.b_x_value_now, self.r_y_value_now, self.g_y_value_now, self.b_y_value_now)
+        self.result = image
+        self.screen_image(image)
+
+    def stereo(self):
+        image = Image.open(self.name)
+        self.image = np.asarray(image)
+        image.close()
+        self.screen_image(self.image)
+
+    def save_stereo(self):
+        if self.steps < 100:
+            image = Image.fromarray(np.uint8(self.result))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+            else:
+                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_stereo()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_stereo(self):
         main_window = MainWidget()
         widget.addWidget(main_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)

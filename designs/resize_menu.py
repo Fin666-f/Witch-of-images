@@ -101,7 +101,7 @@ class Ui_ResizeWindow(object):
         self.spinBox.setMinimumSize(QtCore.QSize(224, 60))
         self.spinBox.setMaximumSize(QtCore.QSize(224, 60))
         self.spinBox.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 22pt \"Arial\";\n"
+"font: 30pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.spinBox.setObjectName("spinBox")
@@ -112,7 +112,7 @@ class Ui_ResizeWindow(object):
         self.spinBox_2.setMinimumSize(QtCore.QSize(224, 60))
         self.spinBox_2.setMaximumSize(QtCore.QSize(224, 60))
         self.spinBox_2.setStyleSheet("background-color:rgb(60, 60, 60);\n"
-"font: 22pt \"Arial\";\n"
+"font: 30pt \"Arial\";\n"
 "color: rgb(255, 255, 255);\n"
 "border-radius: 10px;")
         self.spinBox_2.setObjectName("spinBox_2")
