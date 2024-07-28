@@ -1306,6 +1306,7 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
         self.spinBox_2.setProperty("value", self.y)
         self.x_value_now = self.x
         self.y_value_now = self.y
+        self.relation = self.x / self.y
         self.pixmap = QPixmap(self.name)
         self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
         self.label_image.setPixmap(self.pixmap)
@@ -1354,10 +1355,14 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
 
     def x_value(self, value):
         self.x_value_now = value
+        if self.checkBox.isChecked() and int(self.x_value_now / self.relation) != 0:
+            self.y_value_now = int(self.x_value_now / self.relation)
         self.update()
 
     def y_value(self, value):
         self.y_value_now = value
+        if self.checkBox.isChecked() and int(self.y_value_now * self.relation) != 0:
+            self.x_value_now = int(self.y_value_now * self.relation)
         self.update()
 
     def change_resize(self, image, value_x, value_y):
