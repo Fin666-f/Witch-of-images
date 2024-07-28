@@ -15,7 +15,6 @@ def resource_path(relative_path):
 class Ui_RotationWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1080)
         MainWindow.setMinimumSize(QtCore.QSize(1920, 1080))
         MainWindow.setMaximumSize(QtCore.QSize(1920, 1080))
         MainWindow.setStyleSheet("background-color: rgb(50, 50, 50);\n"
