@@ -1,15 +1,4 @@
-import sys
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-import os
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath("")
-    return os.path.join(base_path, relative_path)
 
 
 class Ui_MainWindow(object):
@@ -27,7 +16,7 @@ class Ui_MainWindow(object):
         self.background_label.setMinimumSize(QtCore.QSize(1920, 1022))
         self.background_label.setMaximumSize(QtCore.QSize(1920, 1022))
         self.background_label.setText("")
-        self.background_label.setPixmap(QtGui.QPixmap(resource_path("system_data/background_dark.png")))
+        self.background_label.setPixmap(QtGui.QPixmap("system_data/background_dark.png"))
         self.background_label.setScaledContents(True)
         self.background_label.setObjectName("background_label")
         self.widget = QtWidgets.QWidget(self.centralwidget)
@@ -59,7 +48,7 @@ class Ui_MainWindow(object):
         self.label_menu.setMinimumSize(QtCore.QSize(90, 90))
         self.label_menu.setMaximumSize(QtCore.QSize(90, 90))
         self.label_menu.setText("")
-        self.label_menu.setPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (2).png")))
+        self.label_menu.setPixmap(QtGui.QPixmap("system_data/dark_icons/image (2).png"))
         self.label_menu.setScaledContents(True)
         self.label_menu.setObjectName("label_menu")
         self.horizontalLayout.addWidget(self.label_menu)
@@ -82,7 +71,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;")
         self.exit_pushButton_2.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (4).png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("system_data/dark_icons/image (4).png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit_pushButton_2.setIcon(icon)
         self.exit_pushButton_2.setIconSize(QtCore.QSize(60, 60))
         self.exit_pushButton_2.setObjectName("exit_pushButton_2")
@@ -108,7 +97,7 @@ class Ui_MainWindow(object):
         self.label_menu_2.setMinimumSize(QtCore.QSize(90, 90))
         self.label_menu_2.setMaximumSize(QtCore.QSize(90, 90))
         self.label_menu_2.setText("")
-        self.label_menu_2.setPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (2).png")))
+        self.label_menu_2.setPixmap(QtGui.QPixmap("system_data/dark_icons/image (2).png"))
         self.label_menu_2.setScaledContents(True)
         self.label_menu_2.setObjectName("label_menu_2")
         self.horizontalLayout_3.addWidget(self.label_menu_2)
@@ -384,7 +373,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;")
         self.back_pushButton.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (3).png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("system_data/dark_icons/image (3).png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.back_pushButton.setIcon(icon1)
         self.back_pushButton.setIconSize(QtCore.QSize(60, 60))
         self.back_pushButton.setObjectName("back_pushButton")
@@ -401,8 +390,8 @@ class Ui_MainWindow(object):
         self.pushButton.setStyleSheet("background-color:rgb(40, 40, 40);")
         self.pushButton.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (6).png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon2.addPixmap(QtGui.QPixmap(resource_path("system_data/dark_icons/image (5).png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon2.addPixmap(QtGui.QPixmap("system_data/dark_icons/image (6).png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("system_data/dark_icons/image (5).png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.pushButton.setIcon(icon2)
         self.pushButton.setIconSize(QtCore.QSize(60, 60))
         self.pushButton.setCheckable(True)

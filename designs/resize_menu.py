@@ -1,15 +1,4 @@
-import sys
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-import os
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath("")
-    return os.path.join(base_path, relative_path)
 
 
 class Ui_ResizeWindow(object):
@@ -27,7 +16,7 @@ class Ui_ResizeWindow(object):
         self.background_label.setMinimumSize(QtCore.QSize(1920, 1022))
         self.background_label.setMaximumSize(QtCore.QSize(1920, 1022))
         self.background_label.setText("")
-        self.background_label.setPixmap(QtGui.QPixmap(resource_path("system_data/background_dark.png")))
+        self.background_label.setPixmap(QtGui.QPixmap("system_data/background_dark.png"))
         self.background_label.setScaledContents(True)
         self.background_label.setObjectName("background_label")
         self.widget = QtWidgets.QWidget(self.centralwidget)

@@ -11,16 +11,9 @@ from designs.mirror_menu import Ui_MirrorWindow
 from designs.rotation_menu import Ui_RotationWindow
 from designs.resize_menu import Ui_ResizeWindow
 from designs.stereo_menu import Ui_StereoWindow
+from designs.cutting_menu import Ui_CutWindow
 import numpy as np
 import os
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath("")
-    return os.path.join(base_path, relative_path)
 
 
 class MainWidget(QMainWindow, Ui_MainWindow):
@@ -49,6 +42,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_10.clicked.connect(self.go_contrast)
         self.pushButton_11.clicked.connect(self.go_mirror)
         self.pushButton_12.clicked.connect(self.go_rotation)
+        self.pushButton_13.clicked.connect(self.go_cut)
         self.pushButton_14.clicked.connect(self.go_resize)
         self.pushButton_15.clicked.connect(self.go_stereo)
         self.back_pushButton.clicked.connect(self.back)
@@ -56,18 +50,18 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.exit_pushButton.clicked.connect(self.exit)
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def screen_update(self):
-        pixmap = QtGui.QPixmap(resource_path(self.name))
+        pixmap = QtGui.QPixmap(self.name)
         if self.pushButton.isChecked():
             pixmap = pixmap.scaled(1420, 1022, QtCore.Qt.KeepAspectRatio)
         else:
@@ -75,7 +69,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.label_image.setPixmap(pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -99,9 +93,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                 image_2 = image_1.copy()
                 image_1.close()
                 if self.steps < 10:
-                    self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                    self.name = f'steps_images/res_0{self.steps}.{self.format}'
                 else:
-                    self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                    self.name = f'steps_images/res_{self.steps}.{self.format}'
                 image_2.save(self.name)
                 self.screen_update()
                 self.image_data()
@@ -112,7 +106,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def embross(self):
         if self.steps < 100:
             self.image_data()
-            image = Image.open(resource_path(self.name))
+            image = Image.open(self.name)
             if image.mode == "RGBA":
                 r, g, b, a = image.split()
             else:
@@ -127,9 +121,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                 result = beta
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             result.save(self.name)
             result.close()
             image.close()
@@ -142,7 +136,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def edges(self):
         if self.steps < 100:
             self.image_data()
-            image = Image.open(resource_path(self.name))
+            image = Image.open(self.name)
             if image.mode == "RGBA":
                 r, g, b, a = image.split()
             else:
@@ -157,9 +151,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                 result = beta
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             result.save(self.name)
             result.close()
             image.close()
@@ -241,12 +235,18 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         widget.addWidget(stereo_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
+    def go_cut(self):
+        self.save_data_settings()
+        cut_window = CutWidget()
+        widget.addWidget(cut_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
     def remove_image(self):
-        images = os.listdir(resource_path('steps_images'))
+        images = os.listdir('steps_images')
         images = sorted(images)
         for i in images:
             if i != 'res_00.JPEG':
-                os.remove(resource_path(f'steps_images/{i}'))
+                os.remove(f'steps_images/{i}')
         self.name = 'steps_images/res_00.JPEG'
         self.steps = 0
         self.save_data_settings()
@@ -254,9 +254,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.screen_update()
 
     def save_image(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         name = self.name
-        self.name, ok = QFileDialog.getSaveFileName(self, 'Save image', resource_path(''), f"{self.format} files (*.{self.format.lower()})")
+        self.name, ok = QFileDialog.getSaveFileName(self, 'Save image', '', f"{self.format} files (*.{self.format.lower()})")
         if ok:
             image.save(self.name)
         self.name = name
@@ -268,11 +268,11 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                 self.back()
 
     def back(self):
-        images = os.listdir(resource_path('steps_images'))
+        images = os.listdir('steps_images')
         images = sorted(images)
         if len(images) > 1:
-            self.name = resource_path('steps_images/' + images[-2])
-            os.remove(resource_path('steps_images/' + images[-1]))
+            self.name = 'steps_images/' + images[-2]
+            os.remove('steps_images/' + images[-1])
             self.screen_update()
             self.steps -= 1
             self.save_data_settings()
@@ -316,7 +316,7 @@ class NegativeWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -331,14 +331,14 @@ class NegativeWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def negative_value(self, value):
@@ -379,9 +379,9 @@ class NegativeWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -426,7 +426,7 @@ class BlurWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -441,14 +441,14 @@ class BlurWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def blur_value(self, value):
@@ -477,9 +477,9 @@ class BlurWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -524,7 +524,7 @@ class ArrangeWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -539,14 +539,14 @@ class ArrangeWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def arrange_value(self, value):
@@ -588,9 +588,9 @@ class ArrangeWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -635,7 +635,7 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -650,14 +650,14 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def saturation_value(self, value):
@@ -687,9 +687,9 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -734,7 +734,7 @@ class BrightWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -749,14 +749,14 @@ class BrightWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def bright_value(self, value):
@@ -794,9 +794,9 @@ class BrightWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -841,7 +841,7 @@ class ContrastWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -856,14 +856,14 @@ class ContrastWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def contrast_value(self, value):
@@ -893,9 +893,9 @@ class ContrastWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -940,7 +940,7 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -955,14 +955,14 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def quantize_value(self, value):
@@ -1002,9 +1002,9 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1049,7 +1049,7 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -1064,14 +1064,14 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def sharpen_value(self, value):
@@ -1100,9 +1100,9 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1124,7 +1124,7 @@ class MirrorWidget(QMainWindow, Ui_MirrorWindow):
         self.open_data_settings()
         self.setupUi(self)
         self.image_data()
-        self.pixmap = QtGui.QPixmap(resource_path(self.name))
+        self.pixmap = QtGui.QPixmap(self.name)
         self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
         self.label_image.setPixmap(self.pixmap)
 
@@ -1134,7 +1134,7 @@ class MirrorWidget(QMainWindow, Ui_MirrorWindow):
         self.pushButton_2.clicked.connect(self.exit_mirror)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -1149,14 +1149,14 @@ class MirrorWidget(QMainWindow, Ui_MirrorWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def mirror(self):
@@ -1181,9 +1181,9 @@ class MirrorWidget(QMainWindow, Ui_MirrorWindow):
                 image = Image.fromarray(np.uint8(pixels[::-1]))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1224,7 +1224,7 @@ class RotationWidget(QMainWindow, Ui_RotationWindow):
         self.label_image.setPixmap(self.pixmap)
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -1239,14 +1239,14 @@ class RotationWidget(QMainWindow, Ui_RotationWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def rotation_value(self, value):
@@ -1275,9 +1275,9 @@ class RotationWidget(QMainWindow, Ui_RotationWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1328,7 +1328,7 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
 
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -1343,14 +1343,14 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
         self.action_8.setText(f'Цветовая модель: {self.mode}')
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def x_value(self, value):
@@ -1387,9 +1387,9 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1465,7 +1465,7 @@ class StereoWidget(QMainWindow, Ui_StereoWindow):
 
 
     def image_data(self):
-        image = Image.open(resource_path(self.name))
+        image = Image.open(self.name)
         self.format = image.format
         self.mode = image.mode
         self.x, self.y = image.size
@@ -1481,14 +1481,14 @@ class StereoWidget(QMainWindow, Ui_StereoWindow):
 
 
     def open_data_settings(self):
-        with open(resource_path("system_data/data.txt"), 'r', encoding='utf8') as file:
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
             data = file.read().rstrip().split('\n')
             self.name = data[0]
             self.steps = int(data[1])
 
     def save_data_settings(self):
         s = self.name + '\n' + str(self.steps)
-        with open(resource_path("system_data/data.txt"), 'w', encoding='utf8') as file:
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
             file.write(s)
 
     def r_y_value(self, value):
@@ -1557,9 +1557,9 @@ class StereoWidget(QMainWindow, Ui_StereoWindow):
             image = Image.fromarray(np.uint8(self.result))
             self.steps += 1
             if self.steps < 10:
-                self.name = resource_path(f'steps_images/res_0{self.steps}.{self.format}')
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
             else:
-                self.name = resource_path(f'steps_images/res_{self.steps}.{self.format}')
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
             image.save(self.name)
             image.close()
             self.save_data_settings()
@@ -1568,6 +1568,139 @@ class StereoWidget(QMainWindow, Ui_StereoWindow):
             self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
 
     def exit_stereo(self):
+        main_window = MainWidget()
+        widget.addWidget(main_window)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class CutWidget(QMainWindow, Ui_CutWindow):
+    def __init__(self):
+        super().__init__()
+        self.open_data_settings()
+        self.setupUi(self)
+        self.image_data()
+        self.cut()
+
+        self.spinBox_2.setMinimum(0)
+        self.spinBox_2.setMaximum(self.y)
+        self.spinBox_2.setProperty("value", 0)
+        self.b_y_value_now = 0
+        self.spinBox_2.valueChanged['int'].connect(self.b_y_value)
+
+        self.spinBox_4.setMinimum(0)
+        self.spinBox_4.setMaximum(self.y)
+        self.spinBox_4.setProperty("value", self.y)
+        self.e_y_value_now = self.y
+        self.spinBox_4.valueChanged['int'].connect(self.e_y_value)
+
+        self.spinBox.setMinimum(0)
+        self.spinBox.setMaximum(self.x)
+        self.spinBox.setProperty("value", 0)
+        self.b_x_value_now = 0
+        self.spinBox.valueChanged['int'].connect(self.b_x_value)
+
+        self.spinBox_3.setMinimum(0)
+        self.spinBox_3.setMaximum(self.x)
+        self.spinBox_3.setProperty("value", self.x)
+        self.e_x_value_now = self.x
+        self.spinBox_3.valueChanged['int'].connect(self.e_x_value)  # type: ignore
+
+        self.pixmap = QPixmap(self.name)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+        self.pushButton_1.clicked.connect(self.save_cut)
+        self.pushButton_2.clicked.connect(self.exit_cut)
+
+    def screen_image(self, image):
+        if self.mode == 'RGBA':
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGBA8888)
+        else:
+            image = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+        self.pixmap = QPixmap.fromImage(image)
+        self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
+        self.label_image.setPixmap(self.pixmap)
+
+
+    def image_data(self):
+        image = Image.open(self.name)
+        self.format = image.format
+        self.mode = image.mode
+        self.x, self.y = image.size
+        image.close()
+        if self.steps < 10:
+            name = f'res_0{self.steps}.{self.format}'
+        else:
+            name = f'res_{self.steps}.{self.format}'
+        self.action_5.setText(f'Имя: {name}')
+        self.action_6.setText(f'Формат: {self.format}')
+        self.action_7.setText(f'Размеры: {self.x} * {self.y}')
+        self.action_8.setText(f'Цветовая модель: {self.mode}')
+
+
+    def open_data_settings(self):
+        with open("system_data/data.txt", 'r', encoding='utf8') as file:
+            data = file.read().rstrip().split('\n')
+            self.name = data[0]
+            self.steps = int(data[1])
+
+    def save_data_settings(self):
+        s = self.name + '\n' + str(self.steps)
+        with open("system_data/data.txt", 'w', encoding='utf8') as file:
+            file.write(s)
+
+    def b_y_value(self, value):
+        self.b_y_value_now = value
+        self.update()
+
+    def b_x_value(self, value):
+        self.b_x_value_now = value
+        self.update()
+
+    def e_y_value(self, value):
+        self.e_y_value_now = value
+        self.update()
+
+    def e_x_value(self, value):
+        self.e_x_value_now = value
+        self.update()
+
+    def change_cut(self, image, b_x, b_y, e_x, e_y):
+        image = Image.fromarray(np.uint8(image))
+        if b_x != e_x and b_y != e_y and e_x > b_x and e_y > b_y:
+            image = image.crop((b_x, b_y, e_x, e_y))
+        image = np.asarray(image)
+        return image
+
+
+    def update(self):
+        image = self.change_cut(self.image, self.b_x_value_now, self.b_y_value_now, self.e_x_value_now,
+                                self.e_y_value_now)
+        self.result = image
+        self.screen_image(image)
+
+    def cut(self):
+        image = Image.open(self.name)
+        self.image = np.asarray(image)
+        image.close()
+        self.screen_image(self.image)
+
+    def save_cut(self):
+        if self.steps < 100:
+            image = Image.fromarray(np.uint8(self.result))
+            self.steps += 1
+            if self.steps < 10:
+                self.name = f'steps_images/res_0{self.steps}.{self.format}'
+            else:
+                self.name = f'steps_images/res_{self.steps}.{self.format}'
+            image.save(self.name)
+            image.close()
+            self.save_data_settings()
+            self.exit_cut()
+        else:
+            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+
+    def exit_cut(self):
         main_window = MainWidget()
         widget.addWidget(main_window)
         widget.setCurrentIndex(widget.currentIndex() + 1)
