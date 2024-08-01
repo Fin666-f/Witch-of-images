@@ -131,8 +131,11 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.image_data()
             self.save_data_settings()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
-
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
+            
     def edges(self):
         if self.steps < 100:
             self.image_data()
@@ -161,7 +164,10 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.image_data()
             self.save_data_settings()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def go_negative(self):
         self.save_data_settings()
@@ -485,7 +491,10 @@ class BlurWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_blur()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_blur(self):
         main_window = MainWidget()
@@ -596,7 +605,10 @@ class ArrangeWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_arrange()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_arrange(self):
         main_window = MainWidget()
@@ -695,8 +707,11 @@ class SaturationWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_saturation()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
-
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
+            
     def exit_saturation(self):
         main_window = MainWidget()
         widget.addWidget(main_window)
@@ -802,7 +817,10 @@ class BrightWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_bright()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_bright(self):
         main_window = MainWidget()
@@ -901,7 +919,10 @@ class ContrastWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_contrast()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_contrast(self):
         main_window = MainWidget()
@@ -1010,7 +1031,10 @@ class QuantizeWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_quantize()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_quantize(self):
         main_window = MainWidget()
@@ -1108,7 +1132,10 @@ class SharpenWidget(QMainWindow, Ui_OtherWindow):
             self.save_data_settings()
             self.exit_sharpen()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_sharpen(self):
         main_window = MainWidget()
@@ -1189,7 +1216,10 @@ class MirrorWidget(QMainWindow, Ui_MirrorWindow):
             self.save_data_settings()
             self.exit_mirror()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_mirror(self):
         main_window = MainWidget()
@@ -1283,7 +1313,10 @@ class RotationWidget(QMainWindow, Ui_RotationWindow):
             self.save_data_settings()
             self.exit_rotation()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_rotation(self):
         main_window = MainWidget()
@@ -1395,7 +1428,10 @@ class ResizeWidget(QMainWindow, Ui_ResizeWindow):
             self.save_data_settings()
             self.exit_resize()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_resize(self):
         main_window = MainWidget()
@@ -1565,7 +1601,10 @@ class StereoWidget(QMainWindow, Ui_StereoWindow):
             self.save_data_settings()
             self.exit_stereo()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_stereo(self):
         main_window = MainWidget()
@@ -1698,7 +1737,10 @@ class CutWidget(QMainWindow, Ui_CutWindow):
             self.save_data_settings()
             self.exit_cut()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def exit_cut(self):
         main_window = MainWidget()
