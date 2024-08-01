@@ -101,7 +101,10 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                 self.image_data()
                 self.save_data_settings()
         else:
-            self.statusBar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.')
+            self.statusbar = QtWidgets.QStatusBar(self)
+            self.statusbar.setObjectName("statusbar")
+            self.statusbar.showMessage('Слишком много изменений. Откатите, пожалуйста, изменения назад.', 5000)
+            self.setStatusBar(self.statusbar)
 
     def embross(self):
         if self.steps < 100:
