@@ -302,10 +302,10 @@ class NegativeWidget(QMainWindow, Ui_OtherWindow):
         self.setupUi(self)
         self.image_data()
         self.negative()
-        self.negative_value_now = -256
-        self.horizontalSlider.setMinimum(-256)
+        self.negative_value_now = 0
+        self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(255)
-        self.horizontalSlider.setProperty("value", -256)
+        self.horizontalSlider.setProperty("value", 0)
         self.pixmap = QPixmap(self.name)
         self.pixmap = self.pixmap.scaled(1420, 1024, QtCore.Qt.KeepAspectRatio)
         self.label_image.setPixmap(self.pixmap)
